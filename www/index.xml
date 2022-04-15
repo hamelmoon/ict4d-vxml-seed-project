@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1">
+  <menu id="entryPoint">
+    <property name="inputmodes" value="dtmf"/>
+    <prompt>
+      <audio src="en/audio/welcome.mp3"/>
+    </prompt>
+
+    <prompt >
+      <audio src="fr/audio/welcome.mp3"/>
+    </prompt>
+    <choice dtmf="1" next="en/auth.xml"/>
+    <choice dtmf="2" next="fr/auth.xml"/>
+  </menu>
+  <catch event="connection.disconnect.hangup">
+    <exit/>
+  </catch>
+</vxml>

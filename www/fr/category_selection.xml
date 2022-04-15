@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" application="root.xml">
+    <menu>
+        <property name="inputmodes" value="dtmf"/>
+
+        <prompt>
+            <audio src="audio/category_selection.mp3" />
+        </prompt>
+
+        <choice dtmf="1" next="#select_rice"/>
+        <choice dtmf="2" next="#select_cotton"/>
+        <choice dtmf="3" next="#select_sorghum" />
+    </menu>
+
+    <form id="select_rice">
+        <block>
+            <assign expr="'rice'" name="application.category" />
+            <goto next="input_price.xml" />
+        </block>
+    </form>
+
+    <form id="select_cotton">
+        <block>
+            <assign expr="'cotton'" name="application.category" />
+            <goto next="input_price.xml" />
+        </block>
+    </form>
+
+    <form id="select_sorghum">
+        <block>
+            <assign expr="'sorghum'" name="application.category" />
+            <goto next="input_price.xml" />
+        </block>
+    </form>
+
+
+</vxml>
