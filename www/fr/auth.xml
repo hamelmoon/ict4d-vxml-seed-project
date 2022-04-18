@@ -13,11 +13,11 @@
                 <if cond="pin == 9999">
                     <audio src="audio/entry_denied.mp3" />
                     <clear namelist="pin"/>
-                    <exit />
+                    <goto next="auth.xml" />
                 <elseif cond="pin == 0000"/>
                     <audio src="audio/invalid_pin.mp3" />
                     <clear namelist="pin"/>
-                    <exit />
+                    <goto next="auth.xml" />
                 <else/>
                     <audio src="audio/auth_complete.mp3" />
                     <goto next="category_selection.xml"/>
