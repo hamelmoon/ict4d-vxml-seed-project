@@ -5,29 +5,37 @@
         <property name="inputmodes" value="dtmf"/>
 
         <prompt>
-      <audio src="audio/review_your_input.mp3" /><break/>
-        <say-as interpret-as="vxml:number">
-            <value expr="application.category"/>
-        </say-as> <audio src="audio/and.mp3" />
-        <break />
-        <say-as interpret-as="vxml:currency">
-            <value expr="application.price"/>
-        </say-as><audio src="audio/and.mp3" />
-        <break />
-        <say-as interpret-as="vxml:number">
-            <value expr="application.sizeKg"/>
-        </say-as><audio src="audio/kilogram.mp3" />
-        <break />
-	<audio src="audio/review_confirm.mp3" />
-    </prompt>
-    <choice dtmf="1" next="#submit"/>
-    <choice dtmf="0" next="category_selection.xml"/>
-</menu>
+            <audio src="audio/listing_uploaded.mp3" />
+            <break/>    
+            <audio src="audio/review_your_input.mp3" />
+            <break/>
+            <say-as interpret-as="vxml:number">
+                <value expr="application.category"/>
+            </say-as>
+            <audio src="audio/and.mp3" />
+            <break />
+            <say-as interpret-as="vxml:currency">
+                <value expr="application.price"/>
+            </say-as>
+            <audio src="audio/franc.mp3" />
+            <break />
+            <audio src="audio/and.mp3" />
+            <break />
+            <say-as interpret-as="vxml:number">
+                <value expr="application.sizeKg"/>
+            </say-as>
+            <audio src="audio/kilogram.mp3" />
+            <break />
+            <audio src="audio/review_confirm.mp3" />
+        </prompt>
+        <choice dtmf="1" next="#submit"/>
+        <choice dtmf="0" next="category_selection.xml"/>
+    </menu>
 
-<form id="submit">
-    <block>
-        <script>
-            <![CDATA[
+    <form id="submit">
+        <block>
+            <script>
+                <![CDATA[
                 function stripSequence(seq) {
                     var out = '';
                     for (var i = 0; i < seq.length; i++) {
@@ -37,30 +45,30 @@
                     return out;
                 }
                 ]]>
-        </script>
-        <!-- change variable names to comply with external API -->
-        <var name="category" expr="application.category" />
-        <var name="sizeKg" expr="stripSequence(application.sizeKg)" />
-        <var name="price" expr="stripSequence(application.price)" />
-        <var name="phonenumber" expr="session.callerid" />
-        <var name="userNum" expr="application.userNum" />
+            </script>
+            <!-- change variable names to comply with external API -->
+            <var name="category" expr="application.category" />
+            <var name="sizeKg" expr="stripSequence(application.sizeKg)" />
+            <var name="price" expr="stripSequence(application.price)" />
+            <var name="phonenumber" expr="session.callerid" />
+            <var name="userNum" expr="application.userNum" />
 
-        <!-- POST request -->
-        <!-- <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber" srcexpr="'https://localhost'" method="post" /> -->
+            <!-- POST request -->
+            <!-- <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber" srcexpr="'https://localhost'" method="post" /> -->
 
-        <goto next="#exit-check" />
-    </block>
-</form>
+            <goto next="#exit-check" />
+        </block>
+    </form>
 
 
-<menu id="exit-check">
-    <property name="inputmodes" value="dtmf"/>
+    <menu id="exit-check">
+        <property name="inputmodes" value="dtmf"/>
 
-    <prompt>
-      <audio src="audio/add_more.mp3" />
-    </prompt>
+        <prompt>
+            <audio src="audio/add_more.mp3" />
+        </prompt>
 
-    <choice dtmf="0" next="category_selection.xml"/>
-</menu>
+        <choice dtmf="0" next="category_selection.xml"/>
+    </menu>
 
 </vxml>
