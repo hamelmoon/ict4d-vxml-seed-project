@@ -33,11 +33,12 @@ if (process.env.NODE_ENV == 'production') {
     user: 'rinejnlhfkdzzl',
     host: 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
     database: 'd6rlvm9rjtdraj',
-    password: '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
+    password:
+      '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
     port: 5432,
     ssl: {
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   });
 } else {
   var connection = new Client({
@@ -118,9 +119,9 @@ app.get('/dashboard', function (request, response) {
   }
 });
 
-app.get('/usermanage', function (request, response) {
+app.get('/farmermanage', function (request, response) {
   if (request.session.loggedin) {
-    response.sendFile(path.join(__dirname + '/../public/usermanage.html'));
+    response.sendFile(path.join(__dirname + '/../public/farmermanage.html'));
   } else {
     response.redirect('/login');
   }
@@ -146,9 +147,47 @@ app.post('/api/listings', (request: any, response) => {
           code: '0000',
           farmerId: farmerId,
         });
+        response.end();
+      } else {
+        response.end();
       }
+    }
+  );
+});
 
-      response.end();
+app.post('/api/farmer_registration', (request: any, response) => {
+  var firstname = request.body.firstname;
+  var lastname = request.body.lastname;
+  var phonenumber = request.body.phonenumber;
+  var streetname = request.body.streetname;
+  var housenumber = request.body.housenumber;
+  var zipcode = request.body.zipcode;
+  var pincode = request.body.pincode;
+
+  //TODO: User validation
+
+  connection.query(
+    'INSERT INTO public.farmers (phone_number, street_name, house_number, zip_code, first_name, last_name, pin_code, created_at, modified_at) VALUES ($1, $2, $3, $4, $5, $6, $7, now(), now()) RETURNING id;',
+    [
+      phonenumber,
+      streetname,
+      housenumber,
+      zipcode,
+      firstname,
+      lastname,
+      pincode,
+    ],
+    (error, results) => {
+      console.log('error', error);
+      console.log('results', results);
+      if (results.rows.length > 0) {
+        response.send({
+          code: '0000',
+        });
+        response.end();
+      } else {
+        response.end();
+      }
     }
   );
 });
@@ -169,19 +208,38 @@ app.post('/api/auth', (request: any, response) => {
   response.redirect('/login');
 });
 
-app.get('/api/getListingData', (request: any, response) => {
+app.get('/api/getFarmersData', (request: any, response) => {
   //TODO PAGING
   var limit = 10000;
   var offset = 0;
   connection.query(
-    'SELECT *  FROM public.listings', [],
+    'SELECT *  FROM public.farmers',
+    [],
 
     (error: any, results: any) => {
       response.send({
         code: '0000',
         data: results.rows,
       });
-      response.end()
+      response.end();
+    }
+  );
+});
+
+app.get('/api/getListingData', (request: any, response) => {
+  //TODO PAGING
+  var limit = 10000;
+  var offset = 0;
+  connection.query(
+    'SELECT *  FROM public.listings',
+    [],
+
+    (error: any, results: any) => {
+      response.send({
+        code: '0000',
+        data: results.rows,
+      });
+      response.end();
     }
   );
 });
@@ -256,14 +314,12 @@ app.post('/api/farmerauth', (request: any, response) => {
             farmerId: results.rows[0]['id'],
           });
           response.end();
-
         } else {
           response.error({
             code: '-1000',
             farmerId: '',
           });
           response.end();
-
         }
       }
     );

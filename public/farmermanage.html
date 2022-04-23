@@ -4,9 +4,9 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="content-language" content="en">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Sem - Semances Électronique Mali</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="/static/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
@@ -27,25 +27,58 @@
   <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
 </head>
 <script>
-  var DashBoard = function () {
+  var FarmerManagement = function () {
     var Init = function () {
-      Controls.GetDashBoardData();
-      Controls.GetListingData();
+      $("#submitFarmerRegistration").unbind().click(Controls.DoPostFarmerRegistration)
+      Controls.GetFarmersData();
     }
 
     var Controls = {
-      GetListingData: function () {
+      DoPostFarmerRegistration: function () {
+
+        var param = {
+          phonenumber: $("#inputPhoneNumber").val(),
+          streetname: $("#inputStreetName").val(),
+          housenumber: $("#inputHouseNumber").val(),
+          zipcode: $("#inputZipCode").val(),
+          firstname: $("#inputFirstName").val(),
+          lastname: $("#inputLastName").val(),
+          pincode: $("#inputPinCode").val(),
+        }
+
+
+        function onSuccess(data) {
+          if (data.code == "0000") {
+            alert('Registration complelete!!');
+            location.reload(true);
+          }
+        }
+
+        function beforeSend() {
+
+        }
+        function onError() {
+          alert("Registration Error");
+        }
+
+        Utils.Request({ url: "/api/farmer_registration", method: "POST", cache: false, async: true }, param, onSuccess, onError, null, beforeSend);
+
+      },
+      GetFarmersData: function () {
         function onSuccess(data) {
           var tbodyListing = ""
           const htmlGenTr = (row) => {
-            return "<td>" + row.id + 
-                    "</td><td>" + row.farmer_id + 
-                    "</td><td>" + row.seed_type + 
-                    "</td><td>" + row.seed_weight + 
-                    "</td><td>" + row.seed_price + 
-                    "</td><td>" + row.created_at + 
-                    "</td>";
-            }
+            return "<td>" + row.id +
+              "</td><td>" + row.first_name +
+              "</td><td>" + row.last_name +
+              "</td><td>" + row.phone_number +
+              "</td><td>" + row.street_name +
+              "</td><td>" + row.house_number +
+              "</td><td>" + row.zip_code +
+              "</td><td>" + row.pin_code +
+              "</td><td>" + row.created_at +
+              "</td>";
+          }
           if (data.code == "0000") {
             data.data.forEach(element => {
               tbodyListing += "<tr>";
@@ -53,7 +86,7 @@
               tbodyListing += "</tr>";
 
             });
-              $("#tbodyListing").html(tbodyListing)
+            $("#tbodyListing").html(tbodyListing)
           }
         }
 
@@ -61,33 +94,13 @@
 
         }
         function onError() {
-          alert("Error");
+          alert("GetFarmersData API Error");
 
         }
 
-        Utils.Request({ url: "/api/getListingData", method: "GET", cache: false, async: true }, {current: 1, pageSize: 100000}, onSuccess, onError, null, beforeSend);
+        Utils.Request({ url: "/api/getFarmersData", method: "GET", cache: false, async: true }, { current: 1, pageSize: 100000 }, onSuccess, onError, null, beforeSend);
 
       },
-      GetDashBoardData: function () {
-        function onSuccess(data) {
-          if (data.code == "0000") {
-            $("#txtCallsToday").html(data.data.callsToday)
-            $("#txtListingToday").html(data.data.listingToday)
-            $("#txtListingTotal").html(data.data.listingTotal)
-            $("#txtActiveFarmersTotal").html(data.data.activeFarmers)
-          }
-        }
-        function beforeSend() {
-
-        }
-        function onError() {
-          alert("Error");
-
-        }
-
-        Utils.Request({ url: "/api/getDashboardData", method: "GET", cache: false, async: true }, {}, onSuccess, onError, null, beforeSend);
-
-      }
     }
 
     this.Controls = Controls;
@@ -117,7 +130,7 @@
   }
 
   $(function () {
-    new DashBoard();
+    new FarmerManagement();
   });
 
 
@@ -185,52 +198,7 @@
       <div class="main-panel">
         <div class="content-wrapper">
           <!-- Page Title Header Ends-->
-          <div class="row">
-            <div class="col-md-12 grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                      <div class="d-flex">
-                        <div class="wrapper">
-                          <h3 class="mb-0 font-weight-semibold" id="txtCallsToday">0</h3>
-                          <h5 class="mb-0 font-weight-medium text-primary">Calls</h5>
-                          <p class="mb-0 text-muted">Today</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
-                      <div class="d-flex">
-                        <div class="wrapper">
-                          <h3 class="mb-0 font-weight-semibold" id="txtListingToday">0</h3>
-                          <h5 class="mb-0 font-weight-medium text-primary">Listings</h5>
-                          <p class="mb-0 text-muted">Today</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
-                      <div class="d-flex">
-                        <div class="wrapper">
-                          <h3 class="mb-0 font-weight-semibold" id="txtListingTotal">0</h3>
-                          <h5 class="mb-0 font-weight-medium text-primary">Listings</h5>
-                          <p class="mb-0 text-muted">Total</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
-                      <div class="d-flex">
-                        <div class="wrapper">
-                          <h3 class="mb-0 font-weight-semibold" id="txtActiveFarmersTotal">0</h3>
-                          <h5 class="mb-0 font-weight-medium text-primary">Active Farmers</h5>
-                          <p class="mb-0 text-muted">Total</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
           <div class="row">
             <div class="col-md-12">
               <div class="row">
@@ -238,22 +206,25 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex justify-content-between">
-                        <h4 class="card-title mb-0">Listings</h4>
+                        <h4 class="card-title mb-0">Farmer list</h4>
                       </div>
                       <div class="table-responsive">
                         <table class="table table-striped table-hover">
                           <thead>
                             <tr>
-                              <th>Listing Id</th>
                               <th>Farmer Id</th>
-                              <th>Type</th>
-                              <th>Weight</th>
-                              <th>Price</th>
-                              <th>Request Date</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Phone Number</th>
+                              <th>Street Name</th>
+                              <th>House Number</th>
+                              <th>Zip Code</th>
+                              <th>Pin Code</th>
+                              <th>Resistration Date</th>
                             </tr>
                           </thead>
-                          <tbody id="tbodyListing" >
-                            
+                          <tbody id="tbodyListing">
+
                           </tbody>
                         </table>
                       </div>
@@ -263,7 +234,54 @@
               </div>
             </div>
           </div>
-
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Farmer resistration form</h4>
+                  <p class="card-description"> </p>
+                  <form class="forms-sample">
+                    <div class="form-group">
+                      <label for="inputFirstName">First Name</label>
+                      <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"
+                        name="firstname">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputLastName">Last Name</label>
+                      <input type="text" class="form-control" id="inputLastName" placeholder="Last Name"
+                        name="lastname">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputPhoneNumber">Phone Number</label>
+                      <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number"
+                        name="phonenumber">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputStreetName">Street Name</label>
+                      <input type="text" class="form-control" id="inputStreetName" placeholder="Street Name"
+                        name="streetname">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputHouseNumber">House Number</label>
+                      <input type="text" class="form-control" id="inputHouseNumber" placeholder="House Number"
+                        name="housenumber">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputZipCode">Zip Code</label>
+                      <input type="text" class="form-control" id="inputZipCode" placeholder="Zip Code" name="zipcode">
+                    </div>
+                    <div class="form-group">
+                      <label for="inputPinCode">Pin Code</label>
+                      <input type="password" class="form-control" id="inputPinCode" placeholder="Pin Code"
+                        name="pincode">
+                    </div>
+                    <button class="btn btn-success mr-2" id="submitFarmerRegistration">Submit</button>
+                    <button class="btn btn-light" onclick="javascript:location.reload(true);">Cancel</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
