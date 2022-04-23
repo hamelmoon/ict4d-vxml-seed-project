@@ -9,6 +9,16 @@ Deploy www folder by logging into voxeo FTP using FileZilla.
 Check the Development Setting document in the team space
 
 # Web service
+
+
+## Local development
+### Run postgre container
+docker-compose up
+### Install dependencies
+yarn
+### Run a service
+yarn run dev
+
 ## DB information
 DB is currently using Heroku postgre.
 
