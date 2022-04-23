@@ -1,5 +1,14 @@
 # ict4d-vxml-seed-project
 
+# Voice Service
+
+## Deploy
+Deploy www folder by logging into voxeo FTP using FileZilla.
+
+## Test Information
+Check the Development Setting document in the team space
+
+# Web service
 ## DB information
 DB is currently using Heroku postgre.
 
