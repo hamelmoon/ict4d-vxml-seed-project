@@ -106,13 +106,13 @@ app.get('/register', function (request, response) {
 
 app.get('/listings', function (request, response) {
   if (request.session.loggedin) {
-    response.sendFile(path.join(__dirname + '/public/listings.html'));
+    response.sendFile(path.join(__dirname + '/../public/listings.html'));
   }
 });
 
 app.get('/dashboard', function (request, response) {
   if (request.session.loggedin) {
-    response.sendFile(path.join(__dirname + '/public/dashboard.html'));
+    response.sendFile(path.join(__dirname + '/../public/dashboard.html'));
   } else {
     response.redirect('/login');
   }
@@ -120,7 +120,7 @@ app.get('/dashboard', function (request, response) {
 
 app.get('/usermanage', function (request, response) {
   if (request.session.loggedin) {
-    response.sendFile(path.join(__dirname + '/public/usermanage.html'));
+    response.sendFile(path.join(__dirname + '/../public/usermanage.html'));
   } else {
     response.redirect('/login');
   }
