@@ -35,7 +35,9 @@ if (process.env.NODE_ENV == 'production') {
     database: 'd6rlvm9rjtdraj',
     password: '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
     port: 5432,
-    ssl: false
+    ssl: {
+      rejectUnauthorized: false
+    }
   });
 } else {
   var connection = new Client({
