@@ -1,9 +1,19 @@
 # ict4d-vxml-seed-project
 
-# Deploy
-brew tap heroku/brew && brew install heroku
-heroku create -a semmali
+## DB information
+DB is currently using Heroku postgre.
 
+## Heroku CLI installation
+### Macos
+brew tap heroku/brew && brew install heroku
+
+## Connect Heroku
+heroku git:remote -a semmali
+
+## Deploy
 git push heroku main
 
-heroku config:get PORT
+## Environment variable setting
+heroku config:set DB_PASSWORD={PUT_YOUR_VALUE} --app semmali
+## How to check a heroku system logs
+heroku logs --tail

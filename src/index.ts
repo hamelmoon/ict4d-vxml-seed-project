@@ -33,8 +33,7 @@ if (process.env.NODE_ENV == 'production') {
     user: 'rinejnlhfkdzzl',
     host: 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
     database: 'd6rlvm9rjtdraj',
-    password:
-      '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
+    password: process.env.DB_PASSWORD,
     port: 5432,
     ssl: {
       rejectUnauthorized: false,
