@@ -3,5 +3,5 @@
     <var name="category" expr="''" />
     <var name="sizeKg" expr="''" />
     <var name="price" expr="''" />
-    <var name="userNum" expr="''" />
+    <var name="farmerId" expr="''" />
 </vxml>

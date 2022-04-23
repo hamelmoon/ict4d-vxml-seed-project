@@ -5,8 +5,6 @@
         <property name="inputmodes" value="dtmf"/>
 
         <prompt>
-            <audio src="audio/listing_uploaded.mp3" />
-            <break/>    
             <audio src="audio/review_your_input.mp3" />
             <break/>
             <say-as interpret-as="vxml:number">
@@ -51,10 +49,15 @@
             <var name="sizeKg" expr="stripSequence(application.sizeKg)" />
             <var name="price" expr="stripSequence(application.price)" />
             <var name="phonenumber" expr="session.callerid" />
-            <var name="userNum" expr="application.userNum" />
+            <var name="farmerId" expr="application.userId" />
 
             <!-- POST request -->
-            <!-- <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber" srcexpr="'https://localhost'" method="post" /> -->
+            <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber farmerId" srcexpr="'https://semmali.herokuapp.com/api/listings'" method="post" />
+
+            <if cond="api.code == 0000">
+                <audio src="audio/listing_uploaded.mp3" /> 
+            </if>
+            <!-- TODO: Listing Failed -->
 
             <goto next="#exit-check" />
         </block>

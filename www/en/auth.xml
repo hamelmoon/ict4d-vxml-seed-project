@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" application="root.xml">
+    <var name="phonenumber" expr="session.callerid" />
+
     <form id="auth-form">
         <field name="pin" type="digits?length=4">
             <prompt>
@@ -9,18 +11,23 @@
                 <audio src="audio/four_digit_number.mp3" />
                 <reprompt/>
             </noinput>
+            <error>
+                <exit/>
+            </error>
             <filled>
-                <if cond="pin == 9999">
+                <data name="api" src="https://semmali.herokuapp.com/api/farmerauth/" method="post" enctype="application/json" namelist="phonenumber pin"/>
+                <assign name="application.farmerId" expr="api.farmerId"/>
+                <if cond="api.code == -9999">
                     <audio src="audio/entry_denied.mp3" />
                     <clear namelist="pin"/>
                     <exit />
-                <elseif cond="pin == 0000"/>
+                    <elseif cond="api.code == 0000"/>
+                    <audio src="audio/auth_complete.mp3" />
+                    <goto next="category_selection.xml"/>
+                    <else/>
                     <audio src="audio/invalid_pin.mp3" />
                     <clear namelist="pin"/>
                     <exit />
-                <else/>
-                    <audio src="audio/auth_complete.mp3" />
-                    <goto next="category_selection.xml"/>
                 </if>
             </filled>
         </field>
