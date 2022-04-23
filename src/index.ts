@@ -90,18 +90,18 @@ app.get('/ping', async (req, res) => {
 });
 
 //static file serving
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, '/../public/')));
 
 app.get('/login', function (request, response) {
-  response.sendFile(path.join(__dirname + '/public/login.html'));
+  response.sendFile(path.join(__dirname + '/../public/login.html'));
 });
 
 app.get('/main', function (request, response) {
-  response.sendFile(path.join(__dirname + '/public/main.html'));
+  response.sendFile(path.join(__dirname + '/../public/main.html'));
 });
 
 app.get('/register', function (request, response) {
-  response.sendFile(path.join(__dirname + '/public/register.html'));
+  response.sendFile(path.join(__dirname + '/../public/register.html'));
 });
 
 app.get('/listings', function (request, response) {
