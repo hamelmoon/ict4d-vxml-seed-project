@@ -1,4 +1,5 @@
 import session from 'express-session';
+import { Client } from 'pg';
 const { I18n } = require('i18n');
 const cookieParser = require('cookie-parser');
 var Pool = require('pg').Pool;
@@ -28,16 +29,16 @@ function errorHandler(err, req, res, next) {
 
 //TODO: To move configs & To encrypt database information
 if (process.env.NODE_ENV == 'production') {
-  var connection = new Pool({
+  var connection = new Client({
     user: 'rinejnlhfkdzzl',
     host: 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
     database: 'd6rlvm9rjtdraj',
-    password:
-      '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
+    password: '3d0789a010474f157c0e18ba2c7f48c638873e6cd68f1f2daeaf31c0b6a86bbc',
     port: 5432,
+    ssl: true
   });
 } else {
-  var connection = new Pool({
+  var connection = new Client({
     user: 'postgres',
     host: 'postgres',
     database: 'postgres',
