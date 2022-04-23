@@ -1,25 +1,27 @@
 {
   "name": "ict4d-vxml-seed-project",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently -k \"yarn run build:watch\" \"yarn run start:dev\"",
+    "dev": "yarn run build && nodemon dist/index.js",
     "start": "node dist/index.js",
-    "start:dev": "nodemon dist/index.js",
-    "build": "tsc",
-    "build:watch": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "yarn clean && yarn copy-files && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf ./dist",
+    "copy-files": "mkdir dist && mkdir ./dist/public && cp -r ./src/public/ ./dist/public"
   },
   "dependencies": {
     "@types/express": "^4.16.1",
     "@types/i18n": "^0.13.2",
     "@types/node": "^11.13.4",
     "@types/pg": "^7.4.14",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
     "express-session": "^1.17.1",
     "i18n": "^0.14.2",
-    "pg": "^7.9.0",
+    "method-override": "^3.0.0",
+    "pg": "^8.0.3",
     "typescript": "^3.4.3"
   },
   "devDependencies": {
