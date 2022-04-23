@@ -1,0 +1,21 @@
+# docker-compose.yml
+version: "3"
+services:
+  # app:
+  #   build: .
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - "3000:3000"
+
+  postgres:
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./ddl:/docker-entrypoint-initdb.d      
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
