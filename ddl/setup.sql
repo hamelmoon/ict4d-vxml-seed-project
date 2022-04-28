@@ -75,7 +75,7 @@ CREATE TABLE public.total_seed_weight (
 CREATE OR REPLACE FUNCTION calc_seed_type() 
 RETURNS trigger AS $fun_seed_type$
 BEGIN
-    INSERT INTO public.seed_type (seed_type, created_at) 
+    INSERT INTO public.total_seed_weight  (seed_type, total_seed_weight) 
         VALUES  (NEW.seed_type, 0);
 END;
 $fun_seed_type$ LANGUAGE plpgsql;
