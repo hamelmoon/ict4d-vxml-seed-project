@@ -51,6 +51,7 @@ const authHandler = (app: express.Application) => {
       var phonenumber = request.body.phonenumber;
       var pin = request.body.pin;
 
+      console.log(phonenumber, pin)
       try {
         //ignore error(reason : history)
         connection.query(
