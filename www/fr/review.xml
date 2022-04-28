@@ -52,13 +52,15 @@
             <var name="farmerId" expr="application.userId" />
 
             <!-- POST request -->
-            <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber farmerId" srcexpr="'https://semmali.herokuapp.com/api/listings'" method="post" />
+            <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber farmerId" srcexpr="'https://semmali.herokuapp.com/api/listings'" method="post" enctype="application/json" />
 
             <if cond="api.code == 0000">
-                <audio src="audio/listing_uploaded.mp3" /> 
+                <audio src="audio/listing_uploaded.mp3" />
             </if>
             <!-- TODO: Listing Failed -->
+            <!-- <if cond="api.code == -9999">
 
+            </if> -->
             <goto next="#exit-check" />
         </block>
     </form>
