@@ -54,6 +54,7 @@ CREATE TABLE public.listings (
 	seed_price numeric NOT NULL,
 	created_at TIMESTAMPTZ DEFAULT Now(),
 	modified_at TIMESTAMPTZ DEFAULT Now(),
+	is_confirmed smallint NOT NULL DEFAULT 0,
 	CONSTRAINT "PK_LISTING_ID" PRIMARY KEY (id)
 );
 
@@ -64,19 +65,12 @@ CREATE TABLE public.total_seed_weight (
     total_seed_weight	INT NOT NULL
 );
 
--- INSERT INTO public.total_seed_weight
--- (seed_type, total_seed_weight)
--- VALUES
--- ('rice', 0),
--- ('cotton', 0),
--- ('sorghum', 0);
-
-
 CREATE OR REPLACE FUNCTION calc_seed_type() 
 RETURNS trigger AS $fun_seed_type$
 BEGIN
     INSERT INTO public.total_seed_weight  (seed_type, total_seed_weight) 
         VALUES  (NEW.seed_type, 0);
+    RETURN NEW;
 END;
 $fun_seed_type$ LANGUAGE plpgsql;
 
@@ -115,3 +109,6 @@ INSERT INTO public.listings
 VALUES(1, 'rice', 1, 10, now(), now());
 
 
+INSERT INTO public.seed_type
+(seed_type, created_at)
+VALUES ('rice', now()), ('cotton', now()), ('sorghum', now());
