@@ -61,8 +61,7 @@
             $("#tbodyListing").html(tbodyListing)
 
             $('#pagination-footer').twbsPagination({
-              totalPages: data.total,
-              visiblePages: (data.total / Data.GetListingDataParam.pageSize) + 1,
+              totalPages: (data.total / Data.GetFarmersDataParam.pageSize) + 1,
               onPageClick: function (event, page) {
                 Data.GetListingDataParam.current = page;
               }
