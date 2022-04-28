@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dbConnection from '../configs/dbConnection';
-import { authorization } from './authHandler'
+import { authorization } from './authHandler';
 var path = require('path');
 
 const farmerHandler = (app: express.Application) => {
@@ -36,9 +36,89 @@ const farmerHandler = (app: express.Application) => {
             response.status(200).json({
               code: '0000',
             });
-          }     
+          }
         }
       );
+    } catch (error) {
+      console.error(error);
+      response.status(500).json({ error: true, trace: error });
+    }
+  });
+
+  app.delete(
+    '/api/farmer/:farmerId',
+    authorization,
+    (request: any, response) => {
+      try {
+        const connection = dbConnection;
+        var farmerId = request.params.farmerId;
+        if (parseInt(farmerId) > 0) {
+          connection.query(
+            'DELETE public.farmers WHERE id=$1;',
+            [farmerId],
+            (error, results) => {
+              console.log('error', error);
+              console.log('results', results);
+              if (results.rows?.length > 0) {
+                response.status(200).json({
+                  code: '0000',
+                });
+              }
+            }
+          );
+        } else {
+          response.status(404).json({
+            code: '-9999',
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: true, trace: error });
+      }
+    }
+  );
+
+  app.put('/api/farmer/:farmerId', (request: any, response) => {
+    try {
+      const connection = dbConnection;
+      var farmerId = request.params.farmerId;
+      var firstname = request.body.firstname;
+      var lastname = request.body.lastname;
+      var phonenumber = request.body.phonenumber;
+      var streetname = request.body.streetname;
+      var housenumber = request.body.housenumber;
+      var zipcode = request.body.zipcode;
+      var pincode = request.body.pincode;
+
+      //TODO: User validation
+      if (parseInt(farmerId) > 0) {
+        connection.query(
+          'UPDATE public.farmers SET phone_number=$1, street_name=$2, house_number=$3, zip_code=$4, first_name=$5, last_name=$6, pin_code=$7, created_at=now(), modified_at=now() WHERE id=$8;',
+          [
+            phonenumber,
+            streetname,
+            housenumber,
+            zipcode,
+            firstname,
+            lastname,
+            pincode,
+            farmerId,
+          ],
+          (error, results) => {
+            console.log('error', error);
+            console.log('results', results);
+            if (results.rows?.length > 0) {
+              response.status(200).json({
+                code: '0000',
+              });
+            }
+          }
+        );
+      } else {
+        response.status(404).json({
+          code: '-9999',
+        });
+      }
     } catch (error) {
       console.error(error);
       response.status(500).json({ error: true, trace: error });
@@ -49,9 +129,9 @@ const farmerHandler = (app: express.Application) => {
     try {
       const connection = dbConnection;
       const pageSize = request.query.pageSize || 50;
-      var currentPage = (request.query.current - 1) || 0;
-      const offset  = currentPage < 0 ? pageSize : currentPage * pageSize;
-      console.log(pageSize, offset)
+      var currentPage = request.query.current - 1 || 0;
+      const offset = currentPage < 0 ? pageSize : currentPage * pageSize;
+      console.log(pageSize, offset);
       connection.query(
         'SELECT * , count(*) OVER() AS total  FROM public.farmers LIMIT $1 OFFSET $2',
         [pageSize, offset],
