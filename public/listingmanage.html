@@ -38,6 +38,27 @@
     }
 
     var Controls = {
+      DoConfirm: function (event) {
+        const listingId = $(event.currentTarget).attr('lId');
+
+        function onSuccess(data) {
+          if (data.code == "0000") {
+            alert('Confirmed')
+            location.reload(true);
+          }
+        }
+
+        function beforeSend() {
+
+        }
+        function onError() {
+          alert("Error");
+          location.reload(true);
+        }
+
+        Utils.Request({ url: "/api/listing/confirm/" + listingId, method: "put", cache: false, async: true }, {}, onSuccess, onError, null, beforeSend);
+
+      },
       GetListingData: function () {
         function onSuccess(data) {
           var tbodyListing = "";
@@ -48,9 +69,12 @@
               "</td><td>" + row.seed_weight +
               "</td><td>" + row.seed_price +
               "</td><td>" + row.created_at +
-              // "</td><td>" + "<button>Edit</button>" +
-              "</td>";
+              "</td><td>" + (row.is_confirmed == 0 ? "<button class='btnClickConfirm' lId=" +  row.id + ">Confirm</button>" : "Confirmed") +
+
+            // "</td><td>" + "<button>Edit</button>" +
+            "</td>";
           }
+          
           if (data.code == "0000") {
             data.data.forEach(element => {
               tbodyListing += "<tr>";
@@ -59,7 +83,7 @@
 
             });
             $("#tbodyListing").html(tbodyListing)
-
+            $(".btnClickConfirm").unbind().click(Controls.DoConfirm);
             $('#pagination-footer').twbsPagination({
               totalPages: parseInt(data.total / Data.GetListingDataParam.pageSize) + 1,
               onPageClick: function (event, page) {
@@ -165,7 +189,7 @@
               <i class="menu-icon typcn typcn-document-text"></i>
               <span class="menu-title">Dashboard</span>
             </a>
-          </li>     
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/listingmanage">
               <i class="menu-icon typcn typcn-document-text"></i>
@@ -205,6 +229,7 @@
                               <th>Weight(kg)</th>
                               <th>Price(franc)</th>
                               <th>Request Date</th>
+                              <th>Confirmed</th>
                               <!-- <th>Action</th> -->
                             </tr>
                           </thead>

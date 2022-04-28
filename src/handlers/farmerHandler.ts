@@ -1,5 +1,11 @@
-import express, { Request, Response } from 'express';
-import dbConnection from '../configs/dbConnection';
+import express from 'express';
+import {
+    addNewFarmer,
+    deleteFarmer,
+    FarmerT,
+    getFarmerList,
+    updateFarmer
+} from '../services/farmerDao';
 import { authorization } from './authHandler';
 var path = require('path');
 
@@ -7,7 +13,6 @@ const farmerHandler = (app: express.Application) => {
   //TODO : prevent CSRF Attack
   app.post('/api/farmer_registration', (request: any, response) => {
     try {
-      const connection = dbConnection;
       var firstname = request.body.firstname;
       var lastname = request.body.lastname;
       var phonenumber = request.body.phonenumber;
@@ -18,8 +23,7 @@ const farmerHandler = (app: express.Application) => {
 
       //TODO: User validation
 
-      connection.query(
-        'INSERT INTO public.farmers (phone_number, street_name, house_number, zip_code, first_name, last_name, pin_code, created_at, modified_at) VALUES ($1, $2, $3, $4, $5, $6, $7, now(), now()) RETURNING id;',
+      addNewFarmer(
         [
           phonenumber,
           streetname,
@@ -50,22 +54,17 @@ const farmerHandler = (app: express.Application) => {
     authorization,
     (request: any, response) => {
       try {
-        const connection = dbConnection;
         var farmerId = request.params.farmerId;
         if (parseInt(farmerId) > 0) {
-          connection.query(
-            'DELETE public.farmers WHERE id=$1;',
-            [farmerId],
-            (error, results) => {
-              console.log('error', error);
-              console.log('results', results);
-              if (results.rows?.length > 0) {
-                response.status(200).json({
-                  code: '0000',
-                });
-              }
+          deleteFarmer([farmerId], (error, results) => {
+            console.log('error', error);
+            console.log('results', results);
+            if (results.rows?.length > 0) {
+              response.status(200).json({
+                code: '0000',
+              });
             }
-          );
+          });
         } else {
           response.status(404).json({
             code: '-9999',
@@ -80,7 +79,6 @@ const farmerHandler = (app: express.Application) => {
 
   app.put('/api/farmer/:farmerId', (request: any, response) => {
     try {
-      const connection = dbConnection;
       var farmerId = request.params.farmerId;
       var firstname = request.body.firstname;
       var lastname = request.body.lastname;
@@ -92,8 +90,7 @@ const farmerHandler = (app: express.Application) => {
 
       //TODO: User validation
       if (parseInt(farmerId) > 0) {
-        connection.query(
-          'UPDATE public.farmers SET phone_number=$1, street_name=$2, house_number=$3, zip_code=$4, first_name=$5, last_name=$6, pin_code=$7, created_at=now(), modified_at=now() WHERE id=$8;',
+        updateFarmer(
           [
             phonenumber,
             streetname,
@@ -127,22 +124,17 @@ const farmerHandler = (app: express.Application) => {
 
   app.get('/api/getFarmersData', authorization, (request: any, response) => {
     try {
-      const connection = dbConnection;
       const pageSize = request.query.pageSize || 50;
       var currentPage = request.query.current - 1 || 0;
       const offset = currentPage < 0 ? pageSize : currentPage * pageSize;
       console.log(pageSize, offset);
-      connection.query(
-        'SELECT * , count(*) OVER() AS total  FROM public.farmers LIMIT $1 OFFSET $2',
-        [pageSize, offset],
-        (error: any, results: any) => {
-          response.status(200).json({
-            code: '0000',
-            total: results?.rows?.[0]?.total || 0,
-            data: results?.rows,
-          });
-        }
-      );
+      getFarmerList([pageSize, offset], (error: any, results: any) => {
+        response.status(200).json({
+          code: '0000',
+          total: results?.rows?.[0]?.total || 0,
+          data: results?.rows as FarmerT[],
+        });
+      });
     } catch (error) {
       console.error(error);
       response.status(500).json({ error: true, trace: error });

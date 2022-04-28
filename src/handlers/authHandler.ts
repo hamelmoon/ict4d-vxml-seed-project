@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { CONST_COOKIE_SECRET } from '../configs/cookieSecret';
 import dbConnection from '../configs/dbConnection';
+import { getFarmerByPhoneNumberAndPin } from '../services/farmerDao';
+import { addCallHistory } from '../services/historyDao';
 var path = require('path');
 const jwt = require('jsonwebtoken');
 const CONST_AUTH_COOKIE_NAME = 'access_token';
@@ -54,21 +56,15 @@ const authHandler = (app: express.Application) => {
       console.log(phonenumber, pin);
       try {
         //ignore error(reason : history)
-        connection.query(
-          'INSERT INTO public.call_history (phone_number, created_at) VALUES($1, now())', [
-            phonenumber
-          ],
-          (error: any, results: any) => {
-            console.log('error', error);
-          }
-        );
+        addCallHistory([phonenumber], (error: any, results: any) => {
+          console.log('error', error);
+        });
       } catch (error) {
         console.error(error);
       }
 
       if (phonenumber && pin) {
-        connection.query(
-          'SELECT * FROM public.farmers WHERE phone_number = $1 AND pin_code = $2',
+        getFarmerByPhoneNumberAndPin(
           [phonenumber, pin],
           (error: any, results: any) => {
             console.debug('error', error);

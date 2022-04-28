@@ -2,6 +2,7 @@ import defaultHandler from './handlers/defaultHandler';
 import { authHandler } from './handlers/authHandler';
 import listingHandler from './handlers/listingHandler';
 import dashboardHandler from './handlers/dashboardHandler';
+import historyHandler from './handlers/historyHandler';
 import farmerHandler from './handlers/farmerHandler';
 import i18nConfig from './configs/i18nConfig';
 import { cookieConfig } from './configs/cookieSecret';
@@ -25,6 +26,7 @@ authHandler(app);
 listingHandler(app);
 dashboardHandler(app);
 farmerHandler(app);
+historyHandler(app);
 defaultHandler(app);
 
 //static file serving
