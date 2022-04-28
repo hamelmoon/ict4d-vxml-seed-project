@@ -42,7 +42,7 @@ export const getFarmerList = (data, callback) => {
   const connection = dbConnection;
 
   connection.query(
-    'SELECT * , count(*) OVER() AS total  FROM public.farmers LIMIT $1 OFFSET $2',
+    'SELECT * , count(*) OVER() AS total  FROM public.farmers ORDER BY id LIMIT $1 OFFSET $2',
     data,
     callback
   );

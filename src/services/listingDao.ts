@@ -41,7 +41,7 @@ export const getListingList = (data, callback) => {
   const connection = dbConnection;
 
   connection.query(
-    'SELECT * , count(*) OVER() AS total  FROM public.listings LIMIT $1 OFFSET $2',
+    'SELECT * , count(*) OVER() AS total  FROM public.listings ORDER BY id LIMIT $1 OFFSET $2',
     data,
     callback
   );
