@@ -49,7 +49,7 @@
             <var name="sizeKg" expr="stripSequence(application.sizeKg)" />
             <var name="price" expr="stripSequence(application.price)" />
             <var name="phonenumber" expr="session.callerid" />
-            <var name="farmerId" expr="application.userId" />
+            <var name="farmerId" expr="application.farmerId" />
 
             <!-- POST request -->
             <data fetchtimeout="20s" name="response" namelist="category sizeKg price phonenumber farmerId" srcexpr="'https://semmali.herokuapp.com/api/listings'" method="post" enctype="application/json" />
