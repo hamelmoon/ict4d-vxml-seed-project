@@ -51,6 +51,38 @@ CREATE TABLE public.listings (
 );
 
 
+CREATE TABLE public.total_seed_weight (
+    id	SERIAL PRIMARY KEY,
+    seed_type varchar(50) NOT NULL UNIQUE,
+    total_seed_weight	INT NOT NULL
+);
+
+INSERT INTO public.total_seed_weight
+(seed_type, total_seed_weight)
+VALUES
+('rice', 0),
+('cotton', 0),
+('sorghum', 0);
+
+
+CREATE OR REPLACE FUNCTION calc_totalweight_by_seed_type() 
+RETURNS trigger AS $calc_totalweight_by_seed_type$
+BEGIN
+    UPDATE public.total_seed_weight
+        SET total_seed_weight = (SELECT SUM(seed_weight)
+                         FROM public.listings
+                         WHERE seed_type = NEW.seed_type)
+         WHERE seed_type = NEW.seed_type;
+    RETURN NEW;
+END;
+$calc_totalweight_by_seed_type$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_listing_added
+  AFTER INSERT
+  ON public.listings
+  FOR EACH ROW
+  EXECUTE PROCEDURE calc_totalweight_by_seed_type();
+
 INSERT INTO public.farmers
 (phone_number, street_name, house_number, zip_code, first_name, last_name, pin_code, created_at, modified_at)
 VALUES('31645313215', 'Test Street', '100', '1085DP', 'Test', 'Von', 1234, now(), now());
