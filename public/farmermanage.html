@@ -98,7 +98,7 @@
             $("#tbodyListing").html(tbodyListing)
             $(".btnGridEdit").unbind().click(Controls.OnClickEditFarmerRegistrationInfo)
             $('#pagination-footer').twbsPagination({
-              totalPages: (data.total / Data.GetFarmersDataParam.pageSize) + 1,
+              totalPages: parseInt(data.total / Data.GetFarmersDataParam.pageSize) + 1,
               onPageClick: function (event, page) {
                 Data.GetFarmersDataParam.current = page;
               }
