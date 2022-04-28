@@ -51,14 +51,16 @@ const authHandler = (app: express.Application) => {
       var phonenumber = request.body.phonenumber;
       var pin = request.body.pin;
 
-      console.log(phonenumber, pin)
+      console.log(phonenumber, pin);
       try {
         //ignore error(reason : history)
         connection.query(
-          'INSERT INTO public.call_history (phone_number, created_at) VALUES($1, now());'[
+          'INSERT INTO public.call_history (phone_number, created_at) VALUES($1, now())', [
             phonenumber
           ],
-          () => {}
+          (error: any, results: any) => {
+            console.log('error', error);
+          }
         );
       } catch (error) {
         console.error(error);
