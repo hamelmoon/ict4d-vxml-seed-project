@@ -20,6 +20,13 @@ CREATE TABLE public.call_history (
 	CONSTRAINT "PK_CALL_HISTORY_ID" PRIMARY KEY (id)
 );
 
+CREATE TABLE public.seed_type (
+	seed_type varchar(50) NOT NULL,
+	created_at TIMESTAMPTZ DEFAULT Now(),	
+	CONSTRAINT "PK_SEED_TYPE" PRIMARY KEY (seed_type)
+);
+
+
 CREATE TABLE public.system_users (
 	id serial NOT NULL,
 	"user_id" varchar(100) NOT NULL,
@@ -57,12 +64,27 @@ CREATE TABLE public.total_seed_weight (
     total_seed_weight	INT NOT NULL
 );
 
-INSERT INTO public.total_seed_weight
-(seed_type, total_seed_weight)
-VALUES
-('rice', 0),
-('cotton', 0),
-('sorghum', 0);
+-- INSERT INTO public.total_seed_weight
+-- (seed_type, total_seed_weight)
+-- VALUES
+-- ('rice', 0),
+-- ('cotton', 0),
+-- ('sorghum', 0);
+
+
+CREATE OR REPLACE FUNCTION calc_seed_type() 
+RETURNS trigger AS $fun_seed_type$
+BEGIN
+    INSERT INTO public.seed_type (seed_type, created_at) 
+        VALUES  (NEW.seed_type, 0);
+END;
+$fun_seed_type$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_seed_type_added
+  AFTER INSERT
+  ON public.seed_type
+  FOR EACH ROW
+  EXECUTE PROCEDURE calc_seed_type();
 
 
 CREATE OR REPLACE FUNCTION calc_totalweight_by_seed_type() 
