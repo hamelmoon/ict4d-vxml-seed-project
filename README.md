@@ -33,6 +33,9 @@ heroku git:remote -a semmali
 git push heroku main
 
 ## Environment variable setting
+heroku config:set DB_USER={PUT_YOUR_VALUE} --app semmali
+heroku config:set DB_HOST={PUT_YOUR_VALUE} --app semmali
+heroku config:set DB_DATABASE={PUT_YOUR_VALUE} --app semmali
 heroku config:set DB_PASSWORD={PUT_YOUR_VALUE} --app semmali
 ## How to check a heroku system logs
 heroku logs --tail

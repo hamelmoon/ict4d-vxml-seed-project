@@ -1,128 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta http-equiv="content-language" content="en">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sem - Semances Électronique Mali</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="/static/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="/static/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.addons.css">
-    <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <link rel="stylesheet" href="/static/assets/css/shared/style.css">
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="/static/assets/css/demo_1/style.css">
-    <!-- End Layout styles -->
-    <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
-  </head>
-  <body>
-    <div class="container-scroller">
-      <!-- partial:partials/_navbar.html -->
-      <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-          <a class="navbar-brand brand-logo" href="/">
-            SEM
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="content-language" content="en">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Sem - Semances Électronique Mali</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="/static/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.addons.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="/static/assets/css/shared/style.css">
+  <!-- endinject -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="/static/assets/css/demo_1/style.css">
+  <!-- End Layout styles -->
+  <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
+  <script>
+    var Main = function () {
+      var Init = function () {
+        Controls.GetDashBoardData();
+      }
+
+      var Controls = {
+
+        GetDashBoardData: function () {
+          function onSuccess(data) {
+            if (data.code == "0000") {
+              $("#txtCallsToday").html(data.data.callsToday)
+              $("#txtListingToday").html(data.data.listingToday)
+              $("#txtListingTotal").html(data.data.listingTotal)
+              $("#txtActiveFarmersTotal").html(data.data.activeFarmers)
+            }
+          }
+          function beforeSend() {
+
+          }
+          function onError() {
+            alert("Error");
+
+          }
+
+          Utils.Request({ url: "/api/getDashboardData", method: "GET", cache: false, async: true }, {}, onSuccess, onError, null, beforeSend);
+
+        }
+      }
+
+      this.Controls = Controls;
+      var Utils = {
+        Request: function (requestInfo, data,
+          onSuccess, // function(data, textStatus) { }
+          onError, // function(XMLHttpRequest, textStatus, errorThrown) { }
+          onComplete, // function(XMLHttpRequest, textStatus) { }
+          beforeSend
+        ) {
+          jQuery.ajax({
+            url: requestInfo.url,
+            data: data,
+            type: requestInfo.method,
+            success: onSuccess,
+            error: onError,
+            beforeSend: beforeSend,
+            complete: onComplete,
+            dataType: 'json',
+            cache: requestInfo.cache,
+            async: requestInfo.async
+          });
+        }
+      };
+
+      Init();
+    }
+
+    $(function () {
+      new Main();
+    });
+
+
+  </script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+        <a class="navbar-brand brand-logo" href="/">
+          SEM
           <a class="navbar-brand brand-logo-mini" href="/">
             SEM</a>
-        </div>
-        <div class="navbar-menu-wrapper d-flex align-items-center">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown language-dropdown">
-              <a class="nav-link dropdown-toggle px-2 d-flex align-items-center" id="LanguageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                <div class="d-inline-flex mr-0 mr-md-3">
-                  <div class="flag-icon-holder">
-                    <i class="flag-icon flag-icon-us"></i>
-                  </div>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown language-dropdown">
+            <a class="nav-link dropdown-toggle px-2 d-flex align-items-center" id="LanguageDropdown" href="#"
+              data-toggle="dropdown" aria-expanded="false">
+              <div class="d-inline-flex mr-0 mr-md-3">
+                <div class="flag-icon-holder">
+                  <i class="flag-icon flag-icon-us"></i>
                 </div>
-                <span class="profile-text font-weight-medium d-none d-md-block">English</span>
+              </div>
+              <span class="profile-text font-weight-medium d-none d-md-block">English</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-left navbar-dropdown py-2" aria-labelledby="LanguageDropdown">
+              <a class="dropdown-item">
+                <div class="flag-icon-holder">
+                  <i class="flag-icon flag-icon-us"></i>
+                </div>English
               </a>
-              <div class="dropdown-menu dropdown-menu-left navbar-dropdown py-2" aria-labelledby="LanguageDropdown">
-                <a class="dropdown-item">
-                  <div class="flag-icon-holder">
-                    <i class="flag-icon flag-icon-us"></i>
-                  </div>English
-                </a>
-                <!-- <a class="dropdown-item">
+              <!-- <a class="dropdown-item">
                   <div class="flag-icon-holder">
                     <i class="flag-icon flag-icon-fr"></i>
                   </div>French
                 </a> -->
-              </div>
-            </li>
-          </ul>
-        </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item nav-category">Main Menu</li>
+          <li class="nav-item">
+            <a class="nav-link" href="/listingmanage">
+              <i class="menu-icon typcn typcn-document-text"></i>
+              <span class="menu-title">Listing Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/farmermanage">
+              <i class="menu-icon typcn typcn-document-text"></i>
+              <span class="menu-title">Farmer Management</span>
+            </a>
+          </li>
+        </ul>
       </nav>
       <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-          <ul class="nav">
-            <li class="nav-item nav-category">Main Menu</li>
-            <li class="nav-item">
-              <a class="nav-link" href="/dashboard">
-                <i class="menu-icon typcn typcn-document-text"></i>
-                <span class="menu-title">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/farmermanage">
-                <i class="menu-icon typcn typcn-document-text"></i>
-                <span class="menu-title">Farmer Management</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <!-- Page Title Header Starts-->
-            <div class="row page-title-header">
-              <div class="col-12">
-                <div class="page-header">
-                  <h4 class="page-title">Welcome!</h4>
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <!-- Page Title Header Starts-->
+          <div class="row page-title-header">
+            <div class="col-12">
+              <div class="page-header">
+                <h4 class="page-title">Welcome!</h4>
+              </div>
+            </div>
+            <div class="col-md-12">
+
+            </div>
+          </div>
+          <!-- Page Title Header Ends-->
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                      <div class="d-flex">
+                        <div class="wrapper">
+                          <h3 class="mb-0 font-weight-semibold" id="txtCallsToday">0</h3>
+                          <h5 class="mb-0 font-weight-medium text-primary">Calls</h5>
+                          <p class="mb-0 text-muted">Today</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
+                      <div class="d-flex">
+                        <div class="wrapper">
+                          <h3 class="mb-0 font-weight-semibold" id="txtListingToday">0</h3>
+                          <h5 class="mb-0 font-weight-medium text-primary">Listings</h5>
+                          <p class="mb-0 text-muted">Today</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
+                      <div class="d-flex">
+                        <div class="wrapper">
+                          <h3 class="mb-0 font-weight-semibold" id="txtListingTotal">0</h3>
+                          <h5 class="mb-0 font-weight-medium text-primary">Listings</h5>
+                          <p class="mb-0 text-muted">Total</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mt-md-0 mt-4">
+                      <div class="d-flex">
+                        <div class="wrapper">
+                          <h3 class="mb-0 font-weight-semibold" id="txtActiveFarmersTotal">0</h3>
+                          <h5 class="mb-0 font-weight-medium text-primary">Active Farmers</h5>
+                          <p class="mb-0 text-muted">Total</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-12">
-              </div>
             </div>
-            <!-- Page Title Header Ends-->
           </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-          <footer class="footer">
-            <div class="container-fluid clearfix">
-              <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Sem Mali 2022</span>
-            </div>
-          </footer>
-          <!-- partial -->
         </div>
-        <!-- main-panel ends -->
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="container-fluid clearfix">
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Sem Mali 2022</span>
+          </div>
+        </footer>
+        <!-- partial -->
       </div>
-      <!-- page-body-wrapper ends -->
+      <!-- main-panel ends -->
     </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="/static/assets/vendors/js/vendor.bundle.base.js"></script>
-    <script src="/static/assets/vendors/js/vendor.bundle.addons.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="/static/assets/js/shared/off-canvas.js"></script>
-    <script src="/static/assets/js/shared/misc.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page-->
-    <script src="/static/assets/js/demo_1/dashboard.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="/static/assets/vendors/js/vendor.bundle.base.js"></script>
+  <script src="/static/assets/vendors/js/vendor.bundle.addons.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="/static/assets/js/shared/off-canvas.js"></script>
+  <script src="/static/assets/js/shared/misc.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="/static/assets/js/demo_1/dashboard.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
-    <script src="/static/assets/js/shared/jquery.cookie.js" type="text/javascript"></script>
-  </body>
+  <script src="/static/assets/js/shared/jquery.cookie.js" type="text/javascript"></script>
+</body>
+
 </html>

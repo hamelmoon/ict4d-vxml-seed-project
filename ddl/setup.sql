@@ -32,7 +32,7 @@ CREATE TABLE public.system_users (
 CREATE TABLE public.agent (
 	id serial NOT NULL,
 	agent_type smallint NOT NULL,
-	name varchar(100) NOT NULL,
+	"name" varchar(100) NOT NULL,
 	phone_number varchar(50) NULL,
 	created_at TIMESTAMPTZ DEFAULT Now(),
 	modified_at TIMESTAMPTZ DEFAULT Now(),
@@ -41,7 +41,7 @@ CREATE TABLE public.agent (
 
 CREATE TABLE public.listings (
 	id serial NOT NULL,
-	farmer_id serial NOT NULL,
+	farmer_id integer references public.farmers(id) NOT NULL,
 	seed_type varchar(50) NOT NULL,
 	seed_weight integer NOT NULL,
 	seed_price numeric NOT NULL,
@@ -57,6 +57,7 @@ VALUES('31645313215', 'Test Street', '100', '1085DP', 'Test', 'Von', 1234, now()
 
 
 INSERT INTO public.listings
-(seed_type, seed_weight, seed_price, created_at, modified_at)
-VALUES('rice', 10, 10, now(), now());
+(farmer_id, seed_type, seed_weight, seed_price, created_at, modified_at)
+VALUES(1, 'rice', 1, 10, now(), now());
+
 

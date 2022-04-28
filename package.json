@@ -2,6 +2,7 @@
   "name": "ict4d-vxml-seed-project",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "yarn run build && nodemon dist/index.js",
     "start": "node dist/index.js",
@@ -17,9 +18,10 @@
     "@types/pg": "^7.4.14",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
-    "express-session": "^1.17.1",
     "i18n": "^0.14.2",
+    "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "pg": "^8.0.3",
     "typescript": "^3.4.3"
