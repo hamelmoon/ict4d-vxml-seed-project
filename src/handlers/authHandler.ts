@@ -1,8 +1,12 @@
 import express, { Request, Response } from 'express';
 import { CONST_COOKIE_SECRET } from '../configs/cookieSecret';
 import dbConnection from '../configs/dbConnection';
+import { getFaciliatorByUserId } from '../services/authDao';
 import { getFarmerByPhoneNumberAndPin } from '../services/farmerDao';
 import { addCallHistory } from '../services/historyDao';
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 var path = require('path');
 const jwt = require('jsonwebtoken');
 const CONST_AUTH_COOKIE_NAME = 'access_token';
@@ -33,17 +37,31 @@ const authorization = (req, res, next) => {
 
 const authHandler = (app: express.Application) => {
   app.post('/api/auth', (request: any, response) => {
-    var username = request.body.username;
-    var password = request.body.password;
-
+    const username = request.body.username;
+    const password = request.body.password;
+    // const hash = bcrypt.hashSync(password, saltRounds);
     if (username && password) {
-      //TODO: implement admin login
-      if (username == 'admin' && password == 'admin') {
-        const token = jwt.sign({ id: 1, role: 'admin' }, CONST_COOKIE_SECRET);
-        response.cookie(CONST_AUTH_COOKIE_NAME, token).redirect('/main');
-      }
+        getFaciliatorByUserId([username], (error: any, results: any) => {
+        console.log('error', error);
+        console.log('results', results);
+        if (results.rowCount > 0) {
+          if (bcrypt.compareSync(password, results?.rows[0]?.password)) {
+            const token = jwt.sign(
+              { id: results.rows[0].user_id, role: 'faciliator' },
+              CONST_COOKIE_SECRET
+            );
+            response.cookie(CONST_AUTH_COOKIE_NAME, token).redirect('/main');
+            response.end();
+          }
+        }else{
+            response.clearCookie(CONST_AUTH_COOKIE_NAME).redirect('/login');
+        }
+      });
+
     }
-    response.clearCookie(CONST_AUTH_COOKIE_NAME).redirect('/login');
+    else{
+        response.clearCookie(CONST_AUTH_COOKIE_NAME).redirect('/login');
+    }
   });
 
   app.post('/api/farmerauth', (request: any, response) => {
@@ -104,3 +122,4 @@ const authHandler = (app: express.Application) => {
 };
 
 export { authorization, authHandler };
+

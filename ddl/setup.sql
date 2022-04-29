@@ -29,7 +29,7 @@ CREATE TABLE public.seed_type (
 
 CREATE TABLE public.faciliator (
 	id serial NOT NULL,
-	"user_id" varchar(100) NOT NULL,
+	"user_id" varchar(100) NOT NULL UNIQUE,
 	"password" varchar(300) NULL,
 	"first_name" varchar(100) NOT NULL,
 	"last_name" varchar(100) NOT NULL,
@@ -93,10 +93,10 @@ CREATE TRIGGER trigger_listing_added
   FOR EACH ROW
   EXECUTE PROCEDURE calc_totalweight_by_seed_type();
 
-INSERT INTO public.faciliator
-('user_id', "password", first_name, last_name, phone_number, created_at, modified_at)
-VALUES('admin', '$2a$10$LZThGgt.Ce2mxGO9TkbEB.ZkvSns6oAjMZiMU2vM6rw5jEMubfSeC', 'Admin', 'Admin', '012345678', now(), now());
 
+INSERT INTO public.faciliator
+(user_id, "password", first_name, last_name, phone_number, created_at, modified_at)
+VALUES('admin', '$2b$10$nrqrT5jlWqnMgxQRU1H8KupbIMiXrCZFvitEVP73WxHiXNsgIxZWW', 'test', 'test', '012345678', now(), now());
 
 INSERT INTO public.farmers
 (phone_number, street_name, house_number, zip_code, first_name, last_name, pin_code, created_at, modified_at)
