@@ -27,24 +27,18 @@ CREATE TABLE public.seed_type (
 );
 
 
-CREATE TABLE public.system_users (
+CREATE TABLE public.faciliator (
 	id serial NOT NULL,
 	"user_id" varchar(100) NOT NULL,
 	"password" varchar(300) NULL,
+	"first_name" varchar(100) NOT NULL,
+	"last_name" varchar(100) NOT NULL,
+	phone_number varchar(50) NULL,	
 	created_at TIMESTAMPTZ DEFAULT Now(),
 	modified_at TIMESTAMPTZ DEFAULT Now(),
-	CONSTRAINT "PK_SYSTEM_USERS_ID" PRIMARY KEY (id)
+	CONSTRAINT "PK_FACILIATORS_ID" PRIMARY KEY (id)
 );
 
-CREATE TABLE public.agent (
-	id serial NOT NULL,
-	agent_type smallint NOT NULL,
-	"name" varchar(100) NOT NULL,
-	phone_number varchar(50) NULL,
-	created_at TIMESTAMPTZ DEFAULT Now(),
-	modified_at TIMESTAMPTZ DEFAULT Now(),
-	CONSTRAINT "PK_AGENT_ID" PRIMARY KEY (id)
-);
 
 CREATE TABLE public.listings (
 	id serial NOT NULL,
@@ -98,6 +92,11 @@ CREATE TRIGGER trigger_listing_added
   ON public.listings
   FOR EACH ROW
   EXECUTE PROCEDURE calc_totalweight_by_seed_type();
+
+INSERT INTO public.faciliator
+('user_id', "password", first_name, last_name, phone_number, created_at, modified_at)
+VALUES('admin', '$2a$10$LZThGgt.Ce2mxGO9TkbEB.ZkvSns6oAjMZiMU2vM6rw5jEMubfSeC', 'Admin', 'Admin', '012345678', now(), now());
+
 
 INSERT INTO public.farmers
 (phone_number, street_name, house_number, zip_code, first_name, last_name, pin_code, created_at, modified_at)
