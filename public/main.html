@@ -36,7 +36,7 @@
         GetSeedTotalWeight: function () {
           function onSuccess(data) {
             if (data.code == "0000") {
-              data.data.array.forEach(element => {
+              data.data.forEach(element => {
                 if (element.seed_type == "rice") {
                   $("#txtRiceTotalWeight").html(data.data.total_seed_weight)
                 }
