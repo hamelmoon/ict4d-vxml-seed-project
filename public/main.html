@@ -38,13 +38,13 @@
             if (data.code == "0000") {
               data.data.forEach(element => {
                 if (element.seed_type == "rice") {
-                  $("#txtRiceTotalWeight").html(data.data.total_seed_weight)
+                  $("#txtRiceTotalWeight").html(element.total_seed_weight)
                 }
                 else if (element.seed_type == "cotton") {
-                  $("#txtCottonTotalWeight").html(data.data.total_seed_weight)
+                  $("#txtCottonTotalWeight").html(element.total_seed_weight)
                 }
                 else if (element.seed_type == "sorghum") {
-                  $("#txtSorghumTotalWeight").html(data.data.total_seed_weight)
+                  $("#txtSorghumTotalWeight").html(element.total_seed_weight)
                 }
               });
             }
