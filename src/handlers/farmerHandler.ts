@@ -127,7 +127,6 @@ const farmerHandler = (app: express.Application) => {
       const pageSize = request.query.pageSize || 50;
       var currentPage = request.query.current - 1 || 0;
       const offset = currentPage < 0 ? pageSize : currentPage * pageSize;
-      console.log(pageSize, offset);
       getFarmerList([pageSize, offset], (error: any, results: any) => {
         response.status(200).json({
           code: '0000',

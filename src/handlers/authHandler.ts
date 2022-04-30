@@ -43,7 +43,6 @@ const authHandler = (app: express.Application) => {
     if (username && password) {
         getFaciliatorByUserId([username], (error: any, results: any) => {
         console.log('error', error);
-        console.log('results', results);
         if (results.rowCount > 0) {
           if (bcrypt.compareSync(password, results?.rows[0]?.password)) {
             const token = jwt.sign(
@@ -70,8 +69,6 @@ const authHandler = (app: express.Application) => {
 
       var phonenumber = request.body.phonenumber;
       var pin = request.body.pin;
-
-      console.log(phonenumber, pin);
       try {
         //ignore error(reason : history)
         addCallHistory([phonenumber], (error: any, results: any) => {

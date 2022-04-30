@@ -1,6 +1,7 @@
 import { Application } from 'express';
 import { getCallHistoryList } from '../services/historyDao';
 import { authorization } from './authHandler';
+var path = require('path');
 
 const historyHandler = (app: Application) => {
   app.get('/api/callhistory', authorization, (request: any, response) => {
@@ -24,6 +25,16 @@ const historyHandler = (app: Application) => {
       response.status(500).json({ error: true, trace: error });
     }
   });
+
+  app.get('/callhistory', authorization, function (request: any, response) {
+    if (request.isAuthenticated) {
+      response.sendFile(
+        path.join(__dirname + '/../../public/callhistory.html')
+      );
+    }
+  });
 };
+
+
 
 export default historyHandler;

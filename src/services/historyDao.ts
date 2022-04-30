@@ -20,7 +20,7 @@ export const getCallHistoryList = (data, callback) => {
   const connection = dbConnection;
 
   connection.query(
-    'SELECT * , count(*) OVER() AS total  FROM public.call_history LIMIT $1 OFFSET $2',
+    'SELECT * , count(*) OVER() AS total  FROM public.call_history ORDER BY created_at DESC LIMIT $1 OFFSET $2',
     data,
     callback
   );

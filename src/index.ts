@@ -33,14 +33,18 @@ defaultHandler(app);
 app.use('/static', express.static(path.join(__dirname, '/../public/')));
 // This should be the last route else any after it wont work
 app.use('*', (req, res) => {
-  res.status(404).json({
-    success: 'false',
-    message: 'Page not found',
-    error: {
-      statusCode: 404,
-      message: 'You reached a route that is not defined on this server',
-    },
-  });
+  if (req.xhr) {
+    res.status(404).json({
+      success: 'false',
+      message: 'Page not found',
+      error: {
+        statusCode: 404,
+        message: 'You reached a route that is not defined on this server',
+      },
+    });
+  } else {
+    res.sendFile(path.join(__dirname + '/../public/404.html'));
+  }
 });
 app.listen(PORT, () => {
   console.log('Started at http://localhost:%d', PORT);
