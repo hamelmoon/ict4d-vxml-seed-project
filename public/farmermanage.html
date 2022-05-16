@@ -29,7 +29,8 @@
 <script>
   var FarmerManagement = function () {
     var Init = function () {
-      $("#submitFarmerRegistration").unbind().click(Controls.DoPostFarmerRegistration)
+      $("#submitFarmerRegistration").unbind();
+      $("#submitFarmerRegistration").click(Controls.DoPostFarmerRegistration)
       Controls.GetFarmersData();
     }
     var Data = {
@@ -41,8 +42,8 @@
         JSON.parse(decodeURIComponent($(event.currentTarget).attr("row")))
 
       },
-      DoPostFarmerRegistration: function () {
-
+      DoPostFarmerRegistration: function (e) {
+        e.preventDefault();
         var param = {
           phonenumber: $("#inputPhoneNumber").val(),
           streetname: $("#inputStreetName").val(),
@@ -66,6 +67,11 @@
         }
         function onError() {
           alert("Registration Error");
+        }
+
+        if($("#inputPinCode").val().length != 4){
+          alert('Pin must length 4 digits')
+          return false;
         }
 
         Utils.Request({ url: "/api/farmer_registration", method: "POST", cache: false, async: true }, param, onSuccess, onError, null, beforeSend);
@@ -282,7 +288,7 @@
                 <div class="card-body">
                   <h4 class="card-title">Farmer resistration form</h4>
                   <p class="card-description"> </p>
-                  <form class="forms-sample">
+                  <form class="forms-sample" onsubmit="javascript:;">
                     <div class="form-group">
                       <label for="inputFirstName">First Name</label>
                       <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"
