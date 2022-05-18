@@ -29,8 +29,9 @@
 <script>
   var FarmerManagement = function () {
     var Init = function () {
-      $("#submitFarmerRegistration").unbind();
-      $("#submitFarmerRegistration").click(Controls.DoPostFarmerRegistration)
+      $("#submitFarmerRegistration").unbind().click(Controls.DoPostFarmerRegistration)
+      $("#submitEditFarmerRegistration").unbind().click(Controls.DoPutFarmerRegistration)
+
       Controls.GetFarmersData();
     }
     var Data = {
@@ -39,8 +40,27 @@
 
     var Controls = {
       OnClickEditFarmerRegistrationInfo: (event) => {
-        JSON.parse(decodeURIComponent($(event.currentTarget).attr("row")))
+        $("#inputEditFarmerId").val('')
 
+        $("#inputEditPhoneNumber").val('')
+        $("#inputEditStreetName").val('')
+        $("#inputEditHouseNumber").val('')
+        $("#inputEditZipCode").val('')
+        $("#inputEditFirstName").val('')
+        $("#inputEditLastName").val('')
+        $("#inputEditPinCode").val('')
+        $('#editModal').modal('show')
+
+        var data = JSON.parse(decodeURIComponent($(event.currentTarget).attr("row")))
+
+        $("#inputEditFarmerId").val(data.id)
+        $("#inputEditPhoneNumber").val(data.phone_number)
+        $("#inputEditStreetName").val(data.street_name)
+        $("#inputEditHouseNumber").val(data.house_number)
+        $("#inputEditZipCode").val(data.zip_code)
+        $("#inputEditFirstName").val(data.first_name)
+        $("#inputEditLastName").val(data.last_name)
+        $("#inputEditPinCode").val(data.pin_code)
       },
       DoPostFarmerRegistration: function (e) {
         e.preventDefault();
@@ -69,7 +89,7 @@
           alert("Registration Error");
         }
 
-        if($("#inputPinCode").val().length != 4){
+        if ($("#inputPinCode").val().length != 4) {
           alert('Pin must length 4 digits')
           return false;
         }
@@ -77,12 +97,48 @@
         Utils.Request({ url: "/api/farmer_registration", method: "POST", cache: false, async: true }, param, onSuccess, onError, null, beforeSend);
 
       },
+      DoPutFarmerRegistration: function (e) {
+        e.preventDefault();
+        var param = {
+          id: $("#inputEditFarmerId").val(),
+          phonenumber: $("#inputEditPhoneNumber").val(),
+          streetname: $("#inputEditStreetName").val(),
+          housenumber: $("#inputEditHouseNumber").val(),
+          zipcode: $("#inputEditZipCode").val(),
+          firstname: $("#inputEditFirstName").val(),
+          lastname: $("#inputEditLastName").val(),
+          pincode: $("#inputEditPinCode").val(),
+        }
+
+
+        function onSuccess(data) {
+          if (data.code == "0000") {
+            alert('Edit complelete!!');
+            location.reload(true);
+          }
+        }
+
+        function beforeSend() {
+
+        }
+        function onError() {
+          alert("Edit Error");
+        }
+
+        if ($("#inputEditPinCode").val().length != 4) {
+          alert('Pin must length 4 digits')
+          return false;
+        }
+        var url = "/api/farmer/" + param.id
+        Utils.Request({ url: url, method: "PUT", cache: false, async: true }, param, onSuccess, onError, null, beforeSend);
+
+      },
       GetFarmersData: function () {
         function onSuccess(data) {
           var tbodyListing = ""
           const htmlGenTr = (row) => {
             return "<td>" + row.id +
-              // "</td><td>" + "<button class='btnGridEdit' row=" + encodeURIComponent(JSON.stringify(row)) + ">Edit</button>" +
+              "</td><td>" + "<button class='btn btn-inverse-primary btnGridEdit' data-toggle='modal; data-target='#editModal' row=" + encodeURIComponent(JSON.stringify(row)) + ">Edit</button>" +
               "</td><td>" + row.first_name +
               "</td><td>" + row.last_name +
               "</td><td>" + row.phone_number +
@@ -194,7 +250,8 @@
             </div>
           </li>
         </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
           <span class="mdi mdi-menu"></span>
         </button>
       </div>
@@ -210,7 +267,7 @@
               <i class="menu-icon typcn typcn-document-text"></i>
               <span class="menu-title">Dashboard</span>
             </a>
-          </li>     
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/listingmanage">
               <i class="menu-icon typcn typcn-document-text"></i>
@@ -246,6 +303,13 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12 grid-margin">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Add new farmer </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 grid-margin">
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex justify-content-between">
@@ -256,7 +320,7 @@
                           <thead>
                             <tr>
                               <th>Farmer Id</th>
-                              <!-- <th>Action</th> -->
+                              <th>Action</th>
                               <th>First Name</th>
                               <th>Last Name</th>
                               <th>Phone Number</th>
@@ -282,50 +346,110 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Farmer resistration form</h4>
-                  <p class="card-description"> </p>
-                  <form class="forms-sample" onsubmit="javascript:;">
-                    <div class="form-group">
-                      <label for="inputFirstName">First Name</label>
-                      <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"
-                        name="firstname">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputLastName">Last Name</label>
-                      <input type="text" class="form-control" id="inputLastName" placeholder="Last Name"
-                        name="lastname">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputPhoneNumber">Phone Number</label>
-                      <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number"
-                        name="phonenumber">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputStreetName">Street Name</label>
-                      <input type="text" class="form-control" id="inputStreetName" placeholder="Street Name"
-                        name="streetname">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputHouseNumber">House Number</label>
-                      <input type="text" class="form-control" id="inputHouseNumber" placeholder="House Number"
-                        name="housenumber">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputZipCode">Zip Code</label>
-                      <input type="text" class="form-control" id="inputZipCode" placeholder="Zip Code" name="zipcode">
-                    </div>
-                    <div class="form-group">
-                      <label for="inputPinCode">Pin Code</label>
-                      <input type="password" class="form-control" id="inputPinCode" placeholder="Pin Code"
-                        name="pincode">
-                    </div>
-                    <button class="btn btn-success mr-2" id="submitFarmerRegistration">Submit</button>
-                    <button class="btn btn-light" onclick="javascript:location.reload(true);">Cancel</button>
-                  </form>
+          <div class=" modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-body">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <h4 class="card-title">Farmer resistration form</h4>
+                    <p class="card-description"> </p>
+                    <form class="forms-sample" onsubmit="javascript:;">
+                      <div class="form-group">
+                        <label for="inputFirstName">First Name</label>
+                        <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"
+                          name="firstname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputLastName">Last Name</label>
+                        <input type="text" class="form-control" id="inputLastName" placeholder="Last Name"
+                          name="lastname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPhoneNumber">Phone Number</label>
+                        <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number"
+                          name="phonenumber">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputStreetName">Street Name</label>
+                        <input type="text" class="form-control" id="inputStreetName" placeholder="Street Name"
+                          name="streetname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputHouseNumber">House Number</label>
+                        <input type="text" class="form-control" id="inputHouseNumber" placeholder="House Number"
+                          name="housenumber">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputZipCode">Zip Code</label>
+                        <input type="text" class="form-control" id="inputZipCode" placeholder="Zip Code" name="zipcode">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPinCode">Pin Code</label>
+                        <input type="password" class="form-control" id="inputPinCode" placeholder="Pin Code"
+                          name="pincode">
+                      </div>
+                      <button class="btn btn-success mr-2" id="submitFarmerRegistration">Submit</button>
+                      <button class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class=" modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+            aria-hidden="true">
+            <div class="modal-body">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <h4 class="card-title">Farmer edit form</h4>
+                    <p class="card-description"> </p>
+                    <form class="forms-sample" onsubmit="javascript:;">
+                      <div class="form-group">
+                        <label for="inputEditFarmerId">Farmer ID</label>
+                        <input type="text" readonly="true" class="form-control" id="inputEditFarmerId"
+                          placeholder="Farmer ID" name="farmerId">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditFirstName">First Name</label>
+                        <input type="text" readonly="true" class="form-control" id="inputEditFirstName"
+                          placeholder="First Name" name="firstname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditLastName">Last Name</label>
+                        <input type="text" readonly="true" class="form-control" id="inputEditLastName"
+                          placeholder="Last Name" name="lastname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditPhoneNumber">Phone Number</label>
+                        <input type="text" class="form-control" id="inputEditPhoneNumber" placeholder="Phone Number"
+                          name="phonenumber">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditStreetName">Street Name</label>
+                        <input type="text" class="form-control" id="inputEditStreetName" placeholder="Street Name"
+                          name="streetname">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditHouseNumber">House Number</label>
+                        <input type="text" class="form-control" id="inputEditHouseNumber" placeholder="House Number"
+                          name="housenumber">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditZipCode">Zip Code</label>
+                        <input type="text" class="form-control" id="inputEditZipCode" placeholder="Zip Code"
+                          name="zipcode">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEditPinCode">Pin Code</label>
+                        <input type="password" class="form-control" id="inputEditPinCode" placeholder="Pin Code"
+                          name="pincode">
+                      </div>
+                      <button class="btn btn-success mr-2" id="submitEditFarmerRegistration">Edit Submit</button>
+                      <button class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>

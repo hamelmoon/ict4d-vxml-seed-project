@@ -104,7 +104,7 @@ const farmerHandler = (app: express.Application) => {
           (error, results) => {
             console.log('error', error);
             console.log('results', results);
-            if (results.rows?.length > 0) {
+            if (results.rowCount > 0) {
               response.status(200).json({
                 code: '0000',
               });
