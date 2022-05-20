@@ -10,6 +10,8 @@ Check the Development Setting document in the team space
 
 # Web service
 
+## Datamodel
+When the Postgres container starts up, the setup.sql script in the 'ddl' folder adds the initial table and mock data.
 
 ## Local development
 ### Run postgre container
