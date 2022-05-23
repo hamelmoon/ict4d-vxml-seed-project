@@ -21,6 +21,17 @@ function errorHandler(err, req, res, next) {
   res.status(500).send({ error: 'Something failed!' });
 }
 const defaultHandler = (app: Application) => {
+  app.get('/guide',async (req, res) => {
+    res.redirect('https://docs.google.com/document/d/1zfEs-7vln-OhqIF9qUryjBfo04YbCz_ljP1sF18WUz8/edit');
+  });
+
+  app.get('/video',async (req, res) => {
+    res.redirect('https://www.youtube.com/watch?v=r8soPXnnug8');
+  })
+  app.get('/repo',async (req, res) => {
+    res.redirect('https://github.com/hamelmoon/ict4d-vxml-seed-project');
+  })
+
   app.get('/ping', async (req, res) => {
     try {
       const connection = dbConnection;
